@@ -42,18 +42,6 @@ def convert_format(data, all_response=False) -> Generator:
 
             yield context, response
 
-def main(fi):
-    parser = create_parser()
-    args = parser.parse_args()
-
-    with open(args.con_output, "w") as con_output_fi, \
-        open(args.res_output, "w") as res_output_fi:
-        for line in tqdm(fi):
-            utterances = line.strip().split(" " + args.sep + " ")
-            for i in range(1, len(utterances)):
-                print(utterances[:i], file=con_output_fi)
-                print(utterances[i:], file=res_output_fi)
-
 
 
 if __name__ == "__main__":
