@@ -1,0 +1,7 @@
+*/__pycache__
+*/data/
+*/outputs/
+*/tmp/
+*/work/
+
+.python-version
