@@ -1,0 +1,41 @@
+{
+    "settings" : {
+        "analysis": {
+            "char_filter": {
+                "normalize": {
+                    "type": "icu_normalizer"
+                }
+            },
+            "tokenizer": {
+                "kuromoji": {
+                    "type": "kuromoji_tokenizer"
+                }
+            },
+            "analyzer": {
+                "analyzer": {
+                    "type": "custom",
+                    "tokenizer":"kuromoji"
+                }
+            }
+        }
+    },
+    "mappings": {
+        "properties": {
+            "title": {
+                "type": "text",
+                "similarity": "BM25",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 8191
+                    }
+                }
+            },
+            "text": {
+                "type": "text",
+                "similarity": "BM25"
+            }
+            
+        }
+    }
+}

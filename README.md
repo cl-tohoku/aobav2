@@ -52,9 +52,23 @@ TBA
             - apply_spm_to_dialog_datasets.sh:
     # dialogs
     - dialogs/:
+        - ilys_fairseq/: TBA
+        - nttcs_fairseq/: TBA
+        - fid/: TBA
+        - dialogpt/: TBA
         - wiki_template/:
             - datasets.yml:                 template_dialogue に必要なファイル
             - wiki_template_dialogue.py:    テンプレート応答
+    # knowledges
+    - knowledges/:
+        - dpr/: TBA
+        - esearch/:
+            - index_config.json:
+            - index_config_sudachi.json:
+            - register_docs_async_icu_normalizer.py:   jsonl データを ES に登録する
+            - es_search.py:                            登録した index_name を用いて検索
+    # telegram
+    - telegrams/: TBA
 
 # 前処理などで参照するデータ（学習データは置かない）
 - data/:
@@ -68,6 +82,8 @@ TBA
     - set_*.sh:                             セットアップ関連
     - download_*.sh:                        ダウンロード関連
     - prepro_*.sh:                          前処理関連
+    - register_wikidump.sh:                 wikidump を ES に登録する
+    - run_giza.sh:                          GIZA++ を用いて A3 ファイルを作成
 
 # 前処理
 - datasets.yml:                             データセットと読み込みモジュール
@@ -76,6 +92,11 @@ TBA
     - formats/:
         - base.py:
         - dailydialog.py:                   DailyDialog データ List[Dialog] の形式で読み込む
+
+# lib
+- lib/:
+    - elasticsearch-7.10.0/:                scripts/set_elasticsearch.sh
+    - giza-pp/:                             scripts/set_giza.sh
 ```
 
 ## filters
