@@ -3,13 +3,15 @@
 ## 設定
 
 ```bash
-$ bash setup.sh
+$ cd $ROOT_REPOSITORY
+$ bash set_giza.sh
 ```
 
 ## 使い方
 - NOTE: 日本語ファイルは予めトークン区切りにする必要がある
 
 ```bash
+$ cd $ROOT_REPOSITORY
 $ bash run_giza.sh en.context ja.context outputs
 ```
 

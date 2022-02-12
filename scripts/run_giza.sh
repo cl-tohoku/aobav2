@@ -7,8 +7,7 @@ DEST=$3/${1%.*}_${2%.*}
 
 mkdir -p $DEST
 
-ROOT=`pwd`
-GIZA=$ROOT/giza-pp/GIZA++-v2
+GIZA=lib/giza-pp/GIZA++-v2
 
 cd $DEST
 $GIZA/plain2snt.out $SRC $TGT

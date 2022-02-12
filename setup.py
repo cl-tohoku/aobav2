@@ -5,6 +5,7 @@ requirements = [name.rstrip() for name in open('requirements.txt')]
 develop_requirements = [
     "mirai_translate==0.1.3",
     "googletrans==4.0.0rc1",
+    "sentence_transformers==2.2.0"
 ]
 
 setup(

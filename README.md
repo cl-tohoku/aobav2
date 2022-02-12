@@ -80,6 +80,21 @@ result = predictor([
 ])
 ```
 
+## giza
+
+```py
+from aoba import (
+    TransEvaluator
+)
+
+# backtrans 評価
+evaluator = TransEvaluator()
+result = evaluator(
+    "she was interested in world history because she read the book", # source
+    "she read the book because she was interested in world history"  # target
+)
+```
+
 ## dialogs
 
 ```py
