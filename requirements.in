@@ -14,3 +14,4 @@ scikit-learn==1.0.2
 emoji==1.6.3
 wikitextparser==0.48.0
 mojimoji==0.0.12
+googletrans==4.0.0-rc1
