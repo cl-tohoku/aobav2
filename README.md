@@ -32,13 +32,15 @@ TBA
     - filters/:
         - parsers.py:                       Mecab parser
         - normalizers.py:                   文正規化や Wikidump のフィルタ処理
+        - dialog_filter.py:                 フィルタ対象か判定（単語数/NG単語/かっこ/仮名率）
+        - postprocess_scorer.py:            スコアを算出（Jaccard/SIF/重複度）
         - bert_predictors/:
             - next_utterance_predictor.py:  NSP
             - nli_predictor.py:             JSNLI
     # giza+アラインメント評価に関するファイル群
     - giza/:
         - evaluate_trans.py:                アラインメント評価
-        - backtrans.py:                     いろいろな評価基準を定義
+        - backtrans.py:                     類似度関連の評価基準を定義
         - sbert.py:                         SentenceTransformer を使用した類似度評価（使用しない）
     # sentencepiece に関するファイル群
     - spm/:
@@ -57,6 +59,9 @@ TBA
 # 前処理などで参照するデータ（学習データは置かない）
 - data/:
     - ng_words.txt:                         NG 単語リスト
+    - wiki_template_dialog/:
+        - context_templates.json:           テンプレート対話に必要
+        - response_templates.jsonl:         テンプレート対話に必要
 
 # 実行スクリプト
 - scripts/:
