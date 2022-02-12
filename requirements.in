@@ -18,3 +18,4 @@ googletrans==4.0.0-rc1
 datasets==1.18.3
 nltk==3.7
 bert_score==0.3.11
+overrides==6.1.0

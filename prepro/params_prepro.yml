@@ -1,0 +1,28 @@
+# 単語数
+min_v: 6
+max_v: 29
+# NG 単語リスト
+fi_ng_word: "data/ng_words.txt"
+# ひらがな・カタカナの割合が n ％以下であれば除去
+kana_ratio_thrs: 0.3
+# 括弧を含む文を除去
+_parentheses: true
+
+
+# Jaccard スコア
+mix_jac_thr: 0.5
+# word frequency
+info_score_thr: none
+wordfreq_file: "/work01/slud_livechat_2020/2013_2018_train_response_head100M_to_compute_wordfreq.wordfreq"
+# 重複度スコア
+duplicate_score_thr: 0.55
+
+
+# Next Utterance Prediction
+_nup: false
+model_nup: "/work01/slud_livechat_2020/mlm-checkpoint-43000-pytorch-model.bin"
+
+
+# JSNLI
+_jsnli: false
+model_jsnli: "/work02/SLUD2021/github/src/submodules/jsnli/outputs/best-24000"

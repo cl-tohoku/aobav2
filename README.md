@@ -154,6 +154,11 @@ response = template_dialogue("東京タワーって知ってる？")
 ## Twitter データに対するフィルタリング
 - https://io-lab.esa.io/posts/2193
 
+```bash
+# 改良版（実行内容は変わっていない。実行可能かチェックが必要）
+bash scripts/prepro_twitter.sh {fi_context} {fi_response} {year}
+```
+
 ## 2020 (NII/LINE)
 
 - Basicフィルタ
@@ -182,4 +187,3 @@ response = template_dialogue("東京タワーって知ってる？")
     - Jaccard similarity が 閾値 0.5 を超えたら除外
   - [x] __繰り返し表現__
     - len(set(words)) / len(words) が 0.5を下回ったら除外
-

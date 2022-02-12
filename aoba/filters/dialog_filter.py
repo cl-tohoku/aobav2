@@ -1,3 +1,4 @@
+from os.path import isfile
 import re
 from typing import List
 import unicodedata
@@ -8,21 +9,22 @@ Dialog = List[Utterance]
 
 
 class DialogFilter:
-    def __init__(self, min_v=6, max_v=29, kana_ratio_thrs=0.3):
+    def __init__(self, fi_ng_word="data/ng_words.txt", min_v=6, max_v=29, kana_ratio_thrs=0.3, _parentheses=True):
         self.min_v = min_v
         self.max_v = max_v
         self.kana_ratio_thrs = kana_ratio_thrs
-        self.ng_words = set([line.strip() for line in open("data/ng_words.txt")])
+        self._parentheses = _parentheses
+        self.ng_words = set([line.strip() for line in open(fi_ng_word)]) if fi_ng_word is not None else []
 
     def __call__(self, dialog:Dialog):
         """ Dialog 単位で、フィルタリング対象かどうか判定する """
-        if self.exceed_word_count(dialog):
+        if (self.min_v and self.max_v) and self.exceed_word_count(dialog):
             return True
-        if self.include_ng_word(dialog):
+        if (self.ng_words) and self.include_ng_word(dialog):
             return True
-        if self.include_parentheses(dialog):
+        if (self._parentheses) and self.include_parentheses(dialog):
             return True
-        if self.is_few_kana(dialog):
+        if (self.kana_ratio_thrs) and self.is_few_kana(dialog):
             return True
         return False
 

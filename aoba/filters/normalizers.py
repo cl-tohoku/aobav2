@@ -33,9 +33,9 @@ class SentenceNormalizer:
         return text
 
     @staticmethod
-    def parentheses(text):
+    def parentheses(text, patterns=["\(.+?\)", "\<.+?\>", "\[.+?]", "（.+?）"]):
         text = text.replace("<s>", "@@s@@")
-        for pattern in ["\(.+?\)", "\<.+?\>", "\[.+?]", "（.+?）"]:
+        for pattern in patterns:
             text = re.sub(pattern, "", text)
         return text.replace("@@s@@", "<s>")
 
