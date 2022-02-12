@@ -3,4 +3,6 @@ import sys
 sys.path.append(dirname(__file__))
 
 from filters.normalizers import SentenceNormalizer
-from filters.tokenizers import MecabParser
+from filters.parsers import MecabParser
+
+from filters.bert_predictors import NextUtterancePredictor, JsnliPredictor
