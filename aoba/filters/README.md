@@ -10,6 +10,18 @@ text = "吾輩は猫である。名前はまだない。"
 parsed_text = parser(text)
 ```
 
+# normalizers.py
+
+## SentenceNormalizer
+
+```py
+from normalizers import SentenceNormalizer
+
+normalizer = SentenceNormalizer()
+text = "ﾔｯﾎｰ...（笑）笑www😄..."
+normalized_text = normalizer(text)
+```
+
 # bert_predictors
 
 ## NextUtterancePredictor
