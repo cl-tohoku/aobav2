@@ -12,6 +12,11 @@
         - bert_predictors/:
             - next_utterance_predictor.py:  NSP
             - nli_predictor.py:             JSNLI
+    # giza+アラインメント評価に関するファイル群
+    - giza/:
+        - evaluate_trans.py:                アラインメント評価
+        - backtrans.py:                     いろいろな評価基準を定義
+        - sbert.py:                         SentenceTransformer を使用した類似度評価（使用しない）
     # sentencepiece に関するファイル群
     - spm/:
         - train_spm.py:
@@ -81,6 +86,11 @@ result = predictor([
 ```
 
 ## giza
+
+```bash
+$ bash scripts/set_giza.sh
+$ bash scripts/run_giza.sh {fi_src} {fi_tgt} {dest}
+```
 
 ```py
 from aoba import (
