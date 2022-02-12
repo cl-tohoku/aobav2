@@ -1,0 +1,39 @@
+{
+  "located in the administrative territorial entity" : [
+    "{subj}はどこにありますか？",
+    "{subj}はどこにあるか知っていますか？"
+  ],
+  "country of citizenship" : [
+    "{subj}は誰ですか？",
+    "{subj}はどこの国の人ですか？",
+    "{subj}はどこの人ですか？",
+    "{subj}の出身国って知ってる？"
+  ],
+  "educated at": [
+    "{subj}はどこの出身ですか？"
+  ],
+  "birthday": [
+    "{subj}の誕生日っていつですか？",
+    "{subj}の生まれはいつですか？"
+  ],
+  "place of birth": [
+    "{subj}の生まれはどこですか？",
+    "{subj}ってどこ生まれの人だっけ？"
+  ],
+  "member of sports team": [
+    "{subj}の所属はどこですか？"
+  ],
+  "occupation": [
+    "{subj}って何の人ですか？",
+    "{subj}って誰ですか？"
+  ],
+  "employer": [
+    "{subj}って何の人ですか？",
+    "{subj}って誰ですか？"
+  ],
+  "period": [
+    "{subj}は誰ですか？"
+  ]
+}
+
+

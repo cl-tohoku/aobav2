@@ -1,0 +1,39 @@
+{"question_phrase": "どこに", "relation": "located in the administrative territorial entity", "template": "{subj}は{obj}にあります。"}
+{"question_phrase": "どこの", "relation": "located in the administrative territorial entity", "template": "{subj}は{obj}に位置しています."}
+{"question_phrase": "どこの", "relation": "country of citizenship", "template": "{subj}は{obj}の人ですね。"}
+{"question_phrase": "どの国", "relation": "country of citizenship", "template": "{subj}は{obj}の人ですね。"}
+{"question_phrase": "出身", "relation": "educated at", "template": "{subj}は{obj}出身だそうです。"}
+{"question_phrase": "出身", "relation": "place of birth", "template": "{subj}の生まれは{obj}だそうです。"}
+{"question_phrase": "生まれ", "relation": "place of birth", "template": "{subj}の生まれは{obj}だそうですね。"}
+{"question_phrase": "所属", "relation": "member of sports team", "template": "{subj}は{obj}に所属しているそうです。"}
+{"question_phrase": "誰", "relation": "sport", "template": "{subj}は{obj}で有名な人ですね。"}
+{"question_phrase": "だれ", "relation": "sport", "template": "{subj}は{obj}で有名な人ですね。"}
+{"question_phrase": "何", "relation": "sport", "template": "{subj}といえば{obj}の言葉ですね。"}
+{"question_phrase": "なに", "relation": "sport", "template": "{subj}といえば{obj}の言葉ですね。"}
+{"question_phrase": "職", "relation": "occupation", "template": "{subj}は{obj}ですね。"}
+{"question_phrase": "誰", "relation": "occupation", "template": "{subj}は{obj}の人ですね。"}
+{"question_phrase": "だれ", "relation": "occupation", "template": "{subj}は{obj}の人だそうです。"}
+{"question_phrase": "職", "relation": "employer", "template": "{subj}は{obj}に勤めているそうです。"}
+{"question_phrase": "どこ", "relation": "employer", "template": "{subj}は{obj}に勤めているそうです。"}
+{"question_phrase": "働", "relation": "employer", "template": "{subj}は{obj}に勤めているそうです。"}
+{"question_phrase": "だれ", "relation": "period", "template": "{subj}は{obj}に活躍した人物だそうですよ。"}
+{"question_phrase": "誰", "relation": "period", "template": "{subj}は{obj}に活躍した人物だそうですよ。"}
+{"question_phrase": "だれ", "relation": "award received", "template": "{subj}は{obj}を受賞した一人だそうですよ。"}
+{"question_phrase": "誰", "relation": "award received", "template": "{subj}は{obj}を受賞した一人だそうですよ。"}
+{"question_phrase": "なに", "relation": "award received", "template": "{subj}は{obj}を受賞した一人だそうですよ。"}
+{"question_phrase": "何", "relation": "award received", "template": "{subj}は{obj}を受賞した一人だそうですよ。"}
+{"question_phrase": "賞", "relation": "award received", "template": "{subj}は{obj}を受賞した一人だそうですよ。"}
+{"question_phrase": "発祥", "relation": "country of origin", "template": "{subj}は{obj}発祥だそうですね。"}
+{"question_phrase": "何", "relation": "parent taxon", "template": "{subj}は{obj}に位置しています。"}
+{"question_phrase": "なに", "relation": "parent taxon", "template": "{subj}は{obj}に位置しています。"}
+{"question_phrase": "何", "relation": "genre", "template": "{subj}は{obj}の一つです。"}
+{"question_phrase": "なに", "relation": "genre", "template": "{subj}は{obj}の一つです。"}
+{"question_phrase": "何", "relation": "original network", "template": "{subj}は{obj}で放送されていた番組だそうですよ。"}
+{"question_phrase": "なに", "relation": "original network", "template": "{subj}は{obj}で放送されていた番組だそうですよ。"}
+{"question_phrase": "何", "relation": "instance of", "template": "{subj}は{obj}の一つです。"}
+{"question_phrase": "なに", "relation": "instance of", "template": "{subj}は{obj}の一つです。"}
+{"question_phrase": "何", "relation": "subclass of", "template": "{subj}は{obj}の一つです。"}
+{"question_phrase": "なに", "relation": "subclass of", "template": "{subj}は{obj}の一つです。"}
+{"question_phrase": "使", "relation": "has part", "template": "{subj}は{obj}を使った料理みたいですよ。"}
+{"question_phrase": "出版", "relation": "publisher", "template": "{subj}は{obj}が出版しているそうですよ。"}
+{"question_phrase": "どこ", "relation": "publisher", "template": "{subj}は{obj}が出版しているそうですよ。"}
