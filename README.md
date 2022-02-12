@@ -82,11 +82,12 @@ result = predictor([
 
 ## dialogs
 
-### wikipedia テンプレート応答
+```py
+from aoba import (
+    WikipediaTemplateDialogue
+)
 
-```bash
-$ python aoba/dialogs/wiki_template/wiki_template_dialogue.py
-# [LOAD] triple: 1792996it [00:14, 126850.24it/s]
-# 東京タワーって知ってますか？
-# ({'subject': '東京タワー', 'object': '観光地', 'relation': 'instance of', 'text': '< subj > 東京 タワー < obj > 観光 地 < sentence > / ( 東京 / 東京 ) / の / ( シンボル / シンボル ) / ・ / ( 観光 地 / 観光 名所 ) / として 知ら れる < eos>'}, '東京タワーって知ってる？', '東京タワーは観光地の一つです。東京のシンボル・観光地として知られみたいですよ。')
+# Wikipedia テンプレート応答
+template_dialogue = WikipediaTemplateDialogue()
+response = template_dialogue("東京タワーって知ってる？")
 ```
