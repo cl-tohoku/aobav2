@@ -8,7 +8,6 @@ import MeCab
 @dataclasses.dataclass
 class MecabField:
     """ 形式は dicrc 参照 """
-    tid: int        # token ID
     surface: str    # 表層形
     pos1: str       # 品詞
     pos2: str       # 品詞細分類1
@@ -39,6 +38,8 @@ class MecabParser(object):
     def select(self, parsed_text:List[MecabField], **kwargs) -> List[MecabField]:
         return list(filter(lambda x: all(x[field] in values for field, values in kwargs.items()), parsed_text))
 
+    def wakati(self, parsed_text:List[MecabField]) -> List[str]:
+        return [word.surface for word in parsed_text]
 
 
 if __name__ == "__main__":
