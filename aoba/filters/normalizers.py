@@ -7,7 +7,7 @@ import emoji
 import mojimoji
 import wikitextparser
 
-sys.path.append(join(dirname(__file__), ".."))
+sys.path.append(dirname(__file__))
 from parsers import MecabParser
 
 

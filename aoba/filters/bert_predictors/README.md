@@ -47,7 +47,7 @@ predictor = JsnliPredictor(args.model_jsnli)
 
 premise = "ワクチン打ったら副作用が辛かった。"
 hypothesis = "具体的にどんな副作用がありました？"
-result = predictor(premise, hypothesis)
+result = predictor([[premise, hypothesis]])
 
 # [[{'label': 'entailment', 'score': 0.00027919572312384844}, {'label': 'neutral', 'score': 0.0010284266900271177}, {'label': 'contradiction', 'score': 0.9986923933029175}]]
 ```
