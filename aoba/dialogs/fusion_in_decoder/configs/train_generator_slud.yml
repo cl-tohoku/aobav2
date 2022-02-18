@@ -1,0 +1,25 @@
+# experiment
+name: "generator_slud"
+seed: 2021
+total_step: 15000
+eval_step: 500
+
+# dataset
+train_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/rcqa2/retrieved/train_rcqa_50.230.json"
+eval_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/jaqket2/retrieved/aio_2020_dev_50.230.json"
+checkpoint_dir: "/groups/1/gcb50246/migrated_from_SFA_GPFS/miyawaki/FiD/models/jaqket"
+
+# model 
+model_name_or_path: "sonoisa/t5-base-japanese"
+use_checkpoint: True
+n_context: 60
+text_maxlength: 250
+
+# training (optimizer & scheduler)
+optim: adamw
+scheduler: linear
+lr: 5e-5
+clip: 1.0
+warmup_step: 1000
+weight_decay: 0.01
+per_gpu_batch_size: 1
