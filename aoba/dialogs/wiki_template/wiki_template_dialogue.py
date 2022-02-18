@@ -129,7 +129,8 @@ class WikipediaTemplateDialogue(object):
                 if k
             ]
         except TypeError:
-            logger.warning("\033[31m" + "TypeError: WikipediaTemplateDialogue.extract_noun_phrases" + "\033[0m")
+            logger.warning("\033[31m" + f"TypeError: WikipediaTemplateDialogue.extract_noun_phrases: {text}" + "\033[0m")
+            return []
 
     def conditioned_knowledge(self, knowledges, template_candidates):
         """ relation が一致するペアを返す。例えば、場所としての「東京」か、観光地としての「東京」か。"""
