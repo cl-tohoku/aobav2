@@ -29,6 +29,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+ROOT_REPOSITORY = join(dirname(__file__), "../"*3)
+
+
 @dataclasses.dataclass
 class Knowledge:
     subject: str
@@ -80,8 +83,8 @@ class WikipediaTemplateDialogue(object):
         self.path = join(dirname(__file__), "datasets.yml")
         self.cfg = OmegaConf.load(self.path)
         self.triple = self.load_triple(self.cfg["wiki_knowledge"])
-        self.response_templates = [json.loads(line) for line in open(self.cfg["wiki_response_template"])]
-        self.context_templates = json.load(open(self.cfg["wiki_context_template"]))
+        self.response_templates = [json.loads(line) for line in open(join(ROOT_REPOSITORY, self.cfg["wiki_response_template"]))]
+        self.context_templates = json.load(open(join(ROOT_REPOSITORY, self.cfg["wiki_context_template"])))
         self.tagger = MecabParser()
         self.cleaner = CleanUpText()
 
@@ -138,10 +141,10 @@ class WikipediaTemplateDialogue(object):
         if pairs:
             # 複数知識が取得された場合はランダムに一つ選択
             knowledge, template = random.choice(pairs)
-            contexts = self.context_templates.get(knowledge['relation'], []) + self.shallow_context
-            context = random.choice(contexts).format(subj=knowledge['subject'])
+            # contexts = self.context_templates.get(knowledge['relation'], []) + self.shallow_context
+            # context = random.choice(contexts).format(subj=knowledge['subject'])
             response = template['template'].format(subj=knowledge['subject'], obj=knowledge['object'])
-            return knowledge, context, response
+            return knowledge, response
 
     def clean_knowledge(self, knowledge):
         return self.cleaner.clean_up_detail_sent(knowledge)
@@ -176,7 +179,7 @@ class WikipediaTemplateDialogue(object):
                 # 質問の対象としている関係（どこ → 場所）に対応する三つ組を返す
                 outputs = self.conditioned_knowledge(knowledges, template_candidates)
                 if outputs is not None:
-                    knowledge, context, response = outputs
+                    knowledge, response = outputs
                     # 整形
                     cleaned_knowledge = self.clean_knowledge(knowledge)
                     response = self.join_response(response, cleaned_knowledge)
