@@ -54,7 +54,7 @@ TBA
     - dialogs/:
         - ilys_fairseq/: TBA
         - nttcs_fairseq/: TBA
-        - fid/: TBA
+        - fusion_in_decoder/: TBA
         - dialogpt/: TBA
         - wiki_template/:
             - datasets.yml:                 template_dialogue に必要なファイル

@@ -12,7 +12,13 @@ import logging
 import json
 from pathlib import Path
 import torch.distributed as dist
-import csv
+
+logging.basicConfig(
+    format="%(asctime)s #%(lineno)s %(levelname)s %(name)s :::  %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO,
+    stream=sys.stdout,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +75,7 @@ def load(model_class, dir_path, args, reset_params=False):
 
     return model, optimizer, scheduler, opt_checkpoint, step, best_eval_metric
 
+
 class WarmupLinearScheduler(torch.optim.lr_scheduler.LambdaLR):
     def __init__(self, optimizer, warmup_steps, scheduler_steps, min_ratio, fixed_lr, last_epoch=-1):
         self.warmup_steps = warmup_steps
@@ -105,13 +112,13 @@ def set_dropout(model, dropout_rate):
 
 
 def set_optim(opt, model):
-    if opt.optim == 'adam':
+    if opt.optim == "adam":
         optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)
-    elif opt.optim == 'adamw':
+    elif opt.optim == "adamw":
         optimizer = torch.optim.AdamW(model.parameters(), lr=opt.lr, weight_decay=opt.weight_decay)
-    if opt.scheduler == 'fixed':
+    if opt.scheduler == "fixed":
         scheduler = FixedScheduler(optimizer)
-    elif opt.scheduler == 'linear':
+    elif opt.scheduler == "linear":
         if opt.scheduler_steps is None:
             scheduler_steps = opt.total_steps
         else:
@@ -149,54 +156,35 @@ def weighted_average(x, count, opt):
 
 
 def write_output(glob_path, output_path):
-    files = list(glob_path.glob('*.txt'))
-    files.sort()
-    with open(output_path, 'w') as outfile:
-        for path in files:
-            with open(path, 'r') as f:
-                lines = f.readlines()
-                for line in lines:
-                    outfile.write(line)
-            path.unlink()
-    glob_path.rmdir()
+    with open(output_path, "w") as fo:
+        for path in sorted(glob_path.glob("*.txt")):
+            for line in open(path):
+                fo.write(line)
+            # path.unlink()
+        logger.info(f"WRITE ... {fo.name}")
+    # glob_path.rmdir()
 
 
 def save_distributed_dataset(data, opt):
     dir_path = Path(opt.checkpoint_dir) / opt.name
-    write_path = dir_path / 'tmp_dir'
+    write_path = dir_path / "tmp_dir"
     write_path.mkdir(exist_ok=True)
-    tmp_path = write_path / f'{opt.global_rank}.json'
-    with open(tmp_path, 'w') as fw:
+    tmp_path = write_path / f"{opt.global_rank}.json"
+    with open(tmp_path, "w") as fw:
         json.dump(data, fw)
     if opt.is_distributed:
         torch.distributed.barrier()
     if opt.is_main:
-        final_path = dir_path / 'dataset_wscores.json'
-        logger.info(f'Writing dataset with scores at {final_path}')
-        glob_path = write_path / '*'
-        results_path = write_path.glob('*.json')
+        final_path = dir_path / "dataset_wscores.json"
+        logger.info(f"Writing dataset with scores at {final_path}")
+        glob_path = write_path / "*"
+        results_path = write_path.glob("*.json")
         alldata = []
         for path in results_path:
-            with open(path, 'r') as f:
+            with open(path, "r") as f:
                 data = json.load(f)
             alldata.extend(data)
             path.unlink()
-        with open(final_path, 'w') as fout:
-            json.dump(alldata, fout, indent=4)
-        write_path.rmdir()
-
-def load_passages(path):
-    if not os.path.exists(path):
-        logger.info(f'{path} does not exist')
-        return
-    logger.info(f'Loading passages from: {path}')
-    passages = []
-    with open(path) as fin:
-        reader = csv.reader(fin, delimiter='\t')
-        for k, row in enumerate(reader):
-            if not row[0] == 'id':
-                try:
-                    passages.append((row[0], row[1], row[2]))
-                except:
-                    logger.warning(f'The following input line has not been correctly loaded: {row}')
-    return passages
+        with open(final_path, "w") as fout:
+            json.dump(alldata, fout, ensure_ascii=False, indent=4)
+        # write_path.rmdir()
