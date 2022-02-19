@@ -2,6 +2,9 @@
 
 - This directory is forked by [facebookresearch/FiD](https://github.com/facebookresearch/FiD)
 
+<img src="https://files.esa.io/uploads/production/attachments/4896/2022/02/09/49957/27069d54-7b0a-4a89-8f73-16511d10dfa9.png" alt="fid" title="fusion-in-decoder">
+
+
 ```bash
 $ cd aobav2/aoba/dialogs/fid
 
