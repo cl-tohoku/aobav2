@@ -20,8 +20,10 @@ import numpy as np
 from os.path import join
 from torch.distributed import get_rank, get_world_size
 
+from env import SP_TOKENS, END_OF_TURN_TOKEN, END_OF_TEXT_TOKEN
 from lsp_model import GPT2LMHeadModel, GPT2Tokenizer, GPT2Config, Adam
-from gpt2_training.train_utils import load_model, boolean_string, set_lr, get_eval_list_same_length
+from transformers import T5Tokenizer, AutoModelForCausalLM
+from gpt2_training.train_utils import load_model, load_ja_model, boolean_string, set_lr, get_eval_list_same_length, load_model
 from gpt2_training.eval_utils import eval_model_loss
 
 from data_loader import BucketingDataLoader, DynamicBatchingLoader, DistributedBucketingDataLoader
@@ -44,8 +46,11 @@ EVAL_STEP = 100000
 ##########################################################################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_name_or_path', type=str,
+parser.add_argument('--model_name_or_path', type=str, default="rinna/japanese-gpt2-medium",
                     help='pretrained model name or path to local checkpoint')
+parser.add_argument('--toker_name_or_path', type=str, default="rinna/japanese-gpt2-medium",
+                    help='pretrained model name or path to local checkpoint')
+parser.add_argument('--model_config', type=str, default="", help="path to model config")
 parser.add_argument("--seed", type=int, default=42)
 parser.add_argument("--max_seq_length", type=int, default=128)
 
@@ -85,6 +90,7 @@ parser.add_argument('--pbar', type=boolean_string, default=True, help='turn on p
 parser.add_argument('--local_rank', type=int, default=-1,
                     help='for torch.distributed')
 parser.add_argument('--config', help='JSON config file')
+parser.add_argument('--ja', action='store_true', help='train English model')
 
 
 # do normal parsing
@@ -165,10 +171,33 @@ for a in args_dict:
 #########################################################################
 # Prepare Data Set
 ##########################################################################
-enc = GPT2Tokenizer.from_pretrained(args.model_name_or_path)
 
-config = GPT2Config.from_json_file(
-    join(args.model_name_or_path, 'config.json'))
+if args.ja:
+    enc = T5Tokenizer.from_pretrained(args.toker_name_or_path)
+    if not os.path.isfile(args.toker_name_or_path):
+        enc.add_special_tokens({'additional_special_tokens': [END_OF_TURN_TOKEN, END_OF_TEXT_TOKEN] + SP_TOKENS})
+        enc.do_lower_case = True
+    tokenizer_dir = os.path.join(output_dir, 'tokenizer')
+    os.makedirs(tokenizer_dir, exist_ok=True)
+    enc.save_pretrained(tokenizer_dir)
+
+    if args.model_name_or_path == "rinna/japanese-gpt2-medium":
+        _model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path)
+        _model.resize_token_embeddings(len(enc.get_vocab()))    # hasattr(_model, 'tie_weights') == True
+        _config = _model.config.__dict__
+        _config['vocab_size'] = len(enc.get_vocab())
+        config = GPT2Config.from_dict(_config)
+    else:
+        if args.model_config:
+            config = GPT2Config.from_json_file(args.model_config)
+        elif os.path.isfile(os.path.join(args.model_name_or_path, 'config.json')):
+            config = GPT2Config.from_json_file(join(args.model_name_or_path, 'config.json'))
+        else:
+            raise FileNotFoundError('The file of model configuration is not found. Please specify `--model_config` or check `--model_name_or_path`')
+else:
+    enc = GPT2Tokenizer.from_pretrained(args.model_name_or_path)
+
+config.to_json_file(os.path.join(output_dir, 'config.json'))
 
 if args.local_rank == -1:
     train_dataloader = BucketingDataLoader(args.train_input_file,
@@ -182,17 +211,22 @@ else:
 
 eval_dataloader_loss = DynamicBatchingLoader(
     args.eval_input_file, enc, args.normalize_data,
-    args.eval_batch_size, args.max_seq_length)
+    args.eval_batch_size, args.max_seq_length, ja=args.ja)
 
 eval_dataloader_gen = get_eval_list_same_length(
-    args.eval_input_file, enc, args.eval_batch_size, True)
+    args.eval_input_file, enc, args.eval_batch_size, True, ja=args.ja)
 
 
 #########################################################################
 # Prepare Model and Optimizer
 ##########################################################################
-model = load_model(GPT2LMHeadModel(config), args.init_checkpoint,
-                   args, verbose=True)
+if args.ja:
+    model = load_ja_model(GPT2LMHeadModel(config), _model,
+                  args, verbose=True)
+else:
+    model = load_model(GPT2LMHeadModel(config), args.init_checkpoint,
+                  args, verbose=True)
+
 if args.local_rank != -1:
     # when from scratch make sure initial models are the same
     params = [p.data for p in model.parameters()]
