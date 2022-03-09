@@ -1,0 +1,24 @@
+{
+  "name": "my_test",
+  "checkpoint_dir": "./checkpoint/",
+  "model_path": "/work02/SLUD2021/models/fid/finetune_w_twitter/step-15000",
+  "per_gpu_batch_size": 1,
+  "maxload": -1,
+  "local_rank": -1,
+  "main_port": -1,
+  "seed": 0,
+  "eval_freq": 500,
+  "save_freq": 5000,
+  "eval_print_freq": 1000,
+
+  "train_data": "none",
+  "eval_data": "none",
+  "model_size": "base",
+  "use_checkpoint": false,
+  "text_maxlength": 200,
+  "answer_maxlength": -1,
+  "no_title": false,
+  "n_context": 5,
+
+  "train_batch_size": 1
+}
