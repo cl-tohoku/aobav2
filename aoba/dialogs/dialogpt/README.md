@@ -43,6 +43,18 @@ bash scripts/merge_file.sh ${fi_context} ${fi_response} ${fo_merge}
 bash scripts/create_db.sh ${fi_tsv} ${max_length=128}
 ```
 
+### End-to-End
+
+Twitter 10K データからデータベースを作成する場合
+
+```bash
+# qsub を使用する場合
+bash scripts/prepro_twitter_10K.sh qsub
+
+# qsub を使用しない場合
+bash scripts/prepro_twitter_10K.sh
+```
+
 
 ## Models
 
