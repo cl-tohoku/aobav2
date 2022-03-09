@@ -7,8 +7,6 @@ from os import path
 import pickle
 import socket
 import sys
-from logzero import logger
-
 
 sys.path.append(path.dirname(__file__))
 from dialogpt4slud import DialoGptModel

@@ -7,12 +7,13 @@ PYENV_NAME=$(pyenv version | awk -F ' ' '{print $1}')
 __DIR__=$(cd $(dirname $0); pwd)
 __FILE__=$(basename $0)
 
-DIR_DATA=/groups2/gcb50246/ariyama/SLUD2021/DialoGPT/
+DIR_DATA=/groups2/gcb50246/miyawaki/SLUD2021/DialoGPT
 FI_TRAIN_DB=$DIR_DATA/train_10K.128len.db
 FI_TOKENIZER=$FI_TRAIN_DB/tokenizer
 FI_VALID_TSV=$DIR_DATA/valid.tsv
 
 DIR_MODEL=$1
+DIR_LOG=$1/logs
 
 
 if [ -z $DIR_MODEL ] && [ ! "$DIR_MODEL" = "qsub" ] ; then
@@ -34,8 +35,8 @@ else
     echo "===== Train DialoGPT ====="
     mkdir -p $DIR_LOG $DIR_MODEL
 
-    CUDA_VISIBLE_DEVICES=0 python LSP_train_ja.py \
-        --model_name_or_path  \
+    CUDA_VISIBLE_DEVICES=0 python LSP_train.py \
+        --model_name_or_path rinna/japanese-gpt2-medium \
         --toker_name_or_path $FI_TOKENIZER \
         --init_checkpoint "None" \
         --train_input_file $FI_TRAIN_DB \
@@ -56,6 +57,7 @@ else
         --loss_scale 0.0 \
         --no_token_id true \
         --pbar true \
+        --ja \
     | tee ${DIR_LOG}/train_${DATE}.log
 
     echo "write ... ${DIR_MODEL}"

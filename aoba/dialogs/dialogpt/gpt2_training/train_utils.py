@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 SEQ_LENGTH_SHRINK_PROP = 0.9
 
 
-def load_ja_model(model, checkpoint, args, verbose=False):
+def load_rinna_medium(model, checkpoint, args, verbose=False):
     n_gpu = args.n_gpu
     device = args.device
     if checkpoint is None or checkpoint == "None":

@@ -10,4 +10,4 @@ cd pytorch-pretrained-BERT
 pip install -e .
 cd ..
 
-pip install -v --disable-pip-version-check --no-cache-dir --global-option=--deprecated_fused_adam 'git+https://github.com/NVIDIA/apex.git' --user
+pip install -v --disable-pip-version-check --no-cache-dir --global-option=--deprecated_fused_adam --global-option=--cpp_ext --global-option=--cuda_ext 'git+https://github.com/NVIDIA/apex.git' --user
