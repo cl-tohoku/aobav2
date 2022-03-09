@@ -45,7 +45,7 @@ bash scripts/create_db.sh ${fi_tsv} ${max_length=128}
 
 ### End-to-End
 
-Twitter 10K データからデータベースを作成する場合
+Twitter 10K データからデータベースを作成する場合（実行前に保存先などを確認して下さい）
 
 ```bash
 # qsub を使用する場合
@@ -56,6 +56,8 @@ bash scripts/prepro_twitter_10K.sh
 ```
 
 ## Train
+
+実行前に保存先などを適宜変更して下さい
 
 ```bash
 bash scripts/train_twitter_10K.sh
