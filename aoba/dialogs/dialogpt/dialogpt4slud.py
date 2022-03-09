@@ -15,7 +15,7 @@ from pytorch_pretrained_bert import GPT2Config
 sys.path.append(os.path.dirname(__file__))
 from env import SP_TOKENS, END_OF_TURN_TOKEN, END_OF_TEXT_TOKEN
 from lsp_model.modeling_gpt2 import GPT2LMHeadModel
-from gpt2_training.train_utils import load_model, load_rinna_medium
+from gpt2_training.train_utils import load_model
 
 
 logging.basicConfig(

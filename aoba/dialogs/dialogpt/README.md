@@ -55,8 +55,35 @@ bash scripts/prepro_twitter_10K.sh qsub
 bash scripts/prepro_twitter_10K.sh
 ```
 
+## Train
+
+```bash
+bash scripts/train_twitter_10K.sh
+
+# 以下のファイルが作成される
+work/GPT2.1e-05.16.1gpu.2022-03-09214622/
+  - tokenizer/
+  - GPT2-pretrain-step-10.pkl
+  - config.json
+```
+
+## Interact
+
+```bash
+DEST=work/GPT2.1e-05.16.1gpu.2022-03-09214622
+
+python dialogpt4slud.py \
+  --dgpt_tokenizer $DEST/tokenizer \
+  --dgpt_model $DEST/GPT2-pretrain-step-10.pkl \
+  --dgpt_config $DEST/config.json
+```
+
 
 ## Models
+
+- [`rinna/gpt2-japanese-medium`](https://github.com/rinnakk/japanese-pretrained-models) のモデルパラメータを DialoGPT の [`GPT2LMHeadModel`](https://huggingface.co/docs/transformers/model_doc/gpt2#transformers.GPT2LMHeadModel) にロードする
+- 具体的には、`LSP_train.py` 実行時に `--ja` を指定。他、`gpt2_training/train_utils.py` の `load_rinna_medium` 関数を作成した。
+
 
 ### English
 
@@ -138,18 +165,3 @@ GPT2Config {
 }
 ```
 
-
-## Train
-
-```bash
-$ bash scripts/train_base.sh
-```
-
-## Interact
-
-```bash
-$ python interact.py \
-  --model_name_or_path ./models/outputs/GPT2.1e-05.16.1gpu.2021-08-26130004/ \
-  --load_checkpoint ./models/outputs/GPT2.1e-05.16.1gpu.2021-08-26130004/GP2-pretrain-step-8.pkl \
-  --top_k 10
-```

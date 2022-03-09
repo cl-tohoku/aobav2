@@ -10,8 +10,7 @@ eval "$(pyenv init -)"
 pyenv activate ${PYENV_NAME}
 
 source /etc/profile.d/modules.sh
-module load cuda/10.2/10.2.89  # load cuda
-module load gcc/7.4.0  # load gcc
+module load cuda/10.2/10.2.89 cudnn/7.6/7.6.5 gcc/7.4.0
 
 export LANG=C.UTF-8
 export PYTHONIOENCODING=utf-8
