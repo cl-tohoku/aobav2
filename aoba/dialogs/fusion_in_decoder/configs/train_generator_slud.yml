@@ -2,18 +2,23 @@
 name: "generator_slud"
 seed: 2021
 total_step: 15000
-eval_step: 500
+eval_step: 20
 
 # dataset
-train_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/rcqa2/retrieved/train_rcqa_50.230.json"
-eval_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/jaqket2/retrieved/aio_2020_dev_50.230.json"
-checkpoint_dir: "/groups/1/gcb50246/migrated_from_SFA_GPFS/miyawaki/FiD/models/jaqket"
+train_data: "/work02/miyawaki/exp2022/test_fid/datasets/fusion_in_decoder/JaqketAIO/unused.jsonl"
+eval_data: "/work02/miyawaki/exp2022/test_fid/datasets/fusion_in_decoder/JaqketAIO/dev.jsonl"
+checkpoint_dir: "/work02/miyawaki/exp2022/test_fid/models/fusion_in_decoder"
+# train_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/rcqa2/retrieved/train_rcqa_50.230.json"
+# eval_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/jaqket2/retrieved/aio_2020_dev_50.230.json"
+# checkpoint_dir: "/groups/1/gcb50246/migrated_from_SFA_GPFS/miyawaki/FiD/models/jaqket"
 
 # model 
 model_name_or_path: "sonoisa/t5-base-japanese"
 use_checkpoint: True
-n_context: 60
-text_maxlength: 250
+# n_context: 60
+n_context: 2
+# text_maxlength: 250
+text_max_length: 20
 
 # training (optimizer & scheduler)
 optim: adamw
@@ -23,3 +28,5 @@ clip: 1.0
 warmup_step: 1000
 weight_decay: 0.01
 per_gpu_batch_size: 1
+
+is_distributed: False

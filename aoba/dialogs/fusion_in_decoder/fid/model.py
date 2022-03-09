@@ -121,9 +121,9 @@ class EncoderWrapper(torch.nn.Module):
     """ Encoder Wrapper for T5 Wrapper to obtain a Fusion-in-Decoder model. """
     def __init__(self, encoder, use_checkpoint=False):
         super().__init__()
-
         self.encoder = encoder
         apply_checkpoint_wrapper(self.encoder, use_checkpoint)
+        self.main_input_name = "input_ids"
 
     def forward(self, input_ids=None, attention_mask=None, **kwargs,):
         # total_length = n_passages * passage_length
@@ -132,7 +132,8 @@ class EncoderWrapper(torch.nn.Module):
         input_ids = input_ids.view(bsz*self.n_passages, passage_length)
         attention_mask = attention_mask.view(bsz*self.n_passages, passage_length)
         outputs = self.encoder(input_ids, attention_mask, **kwargs)
-        return (outputs[0].view(bsz, self.n_passages*passage_length, -1), ) + outputs[1:]
+        outputs.last_hidden_state = outputs.last_hidden_state.view(bsz, self.n_passages*passage_length, -1)
+        return outputs
 
 
 class CheckpointWrapper(torch.nn.Module):

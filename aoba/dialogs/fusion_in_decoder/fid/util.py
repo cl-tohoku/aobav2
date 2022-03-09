@@ -179,7 +179,7 @@ def save_distributed_dataset(data, opt):
         logger.info(f"Writing dataset with scores at {final_path}")
         glob_path = write_path / "*"
         results_path = write_path.glob("*.json")
-        alldata = []
+        all_data = []
         for path in results_path:
             with open(path, "r") as f:
                 data = json.load(f)
