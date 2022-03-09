@@ -43,13 +43,12 @@ def encode_passages(tokenizer, batch_text_passages, max_length):
         p = tokenizer.batch_encode_plus(
             text_passages,
             max_length=max_length,
-            pad_to_max_length=True,
+            padding=True,
             return_tensors="pt",
             truncation=True
         )
-        passage_ids.append(p["input_ids"][None])
+        passage_ids.append(p["input_ids"][None])            # To 3D
         passage_masks.append(p["attention_mask"][None])
-
     passage_ids = torch.cat(passage_ids, dim=0)
     passage_masks = torch.cat(passage_masks, dim=0)
     return passage_ids, passage_masks.bool()
@@ -68,6 +67,7 @@ class Dataset(torch.utils.data.Dataset):
         self.title_prefix = title_prefix
         self.passage_prefix = passage_prefix
         self.sort_data()
+        self.sep = " [SEP] "
 
     def __len__(self):
         return len(self.data)
@@ -75,9 +75,9 @@ class Dataset(torch.utils.data.Dataset):
     def get_target(self, example):
         if "target" in example:
             target = example["target"]
-            return target + " </s>"
+            return target + self.sep
         elif "answers" in example:
-            return random.choice(example["answers"]) + " </s>"
+            return random.choice(example["answers"]) + self.sep
         else:
             return None
 
@@ -130,7 +130,7 @@ class Collator(object):
         target = self.tokenizer.batch_encode_plus(
             target,
             max_length = self.answer_maxlength if self.answer_maxlength > 0 else None,
-            pad_to_max_length = True,
+            padding = True,
             return_tensors = "pt",
             truncation = self.answer_maxlength > 0,
         )
@@ -142,6 +142,7 @@ class Collator(object):
             if example["passages"] is None:
                 return [example["question"]]
             return [example["question"] + " " + t for t in example["passages"]]
+
         text_passages = [append_question(example) for example in batch]
         passage_ids, passage_masks = encode_passages(
             self.tokenizer,
@@ -165,7 +166,7 @@ class RetrieverCollator(object):
         question = [ex["question"] for ex in batch]
         question = self.tokenizer.batch_encode_plus(
             question,
-            pad_to_max_length = True,
+            padding = True,
             return_tensors = "pt",
             max_length = self.question_maxlength,
             truncation = True
@@ -217,7 +218,7 @@ class TextCollator(object):
         index = [x[0] for x in batch]
         encoded_batch = self.tokenizer.batch_encode_plus(
             [x[1] for x in batch],
-            pad_to_max_length=True,
+            padding=True,
             return_tensors="pt",
             max_length=self.maxlength,
             truncation=True

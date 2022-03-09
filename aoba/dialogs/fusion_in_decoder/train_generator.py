@@ -9,6 +9,8 @@ import logging
 from pathlib import Path
 import sys
 
+from tqdm import tqdm
+
 import numpy as np
 
 import torch
@@ -57,53 +59,57 @@ def train(args, tokenizer, model, optimizer, scheduler, train_dataset, valid_dat
     )
 
     model.train()
-    epoch, curr_loss = 0, 0.0
-    while step < args.total_steps:
-        epoch += 1
-        for i, batch in enumerate(train_dataloader):
-            step += 1
-            qids, target_ids, target_masks, passage_ids, passage_masks = batch
-            outputs = model(
-                input_ids = passage_ids.cuda(),
-                attention_mask = passage_masks.cuda(),
-                labels = target_ids.cuda(),
-            )
-            
-            train_loss = outputs[0]
-            train_loss.backward()
+    epoch, curr_loss, loss = 0, 0.0, -1.0
+    with tqdm(desc='[Train]') as pbar:
+        while step < args.total_steps:
+            epoch += 1
+            for i, batch in enumerate(train_dataloader):
+                pbar.set_postfix(loss=loss)
+                step += 1
+                qids, target_ids, target_masks, passage_ids, passage_masks = batch
+                outputs = model(
+                    input_ids = passage_ids.cuda(),
+                    attention_mask = passage_masks.cuda(),
+                    labels = target_ids.cuda(),
+                )
+                
+                train_loss = outputs.loss
+                train_loss.backward()
 
-            if step % args.accumulation_steps == 0:
-                torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
-                optimizer.step()
-                scheduler.step()
-                model.zero_grad()
+                if step % args.accumulation_steps == 0:
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
+                    optimizer.step()
+                    scheduler.step()
+                    model.zero_grad()
 
-            train_loss = util.average_main(train_loss, args)
-            curr_loss += train_loss.item()
+                train_loss = util.average_main(train_loss, args)
+                curr_loss += train_loss.item()
 
-            if step % args.eval_step == 0:
-                valid_em = evaluate(args, valid_dataset, collator, tokenizer, model)
-                model.train()
-                if args.is_main:
-                    if valid_em > best_valid_em:
-                        best_valid_em = valid_em
-                        util.save(model, optimizer, scheduler, step, best_valid_em, args, checkpoint_path, "best_dev")
+                if step % args.eval_step == 0:
+                    valid_em = evaluate(args, valid_dataset, collator, tokenizer, model)
+                    model.train()
+                    if args.is_main:
+                        if valid_em > best_valid_em:
+                            best_valid_em = valid_em
+                            util.save(model, optimizer, scheduler, step, best_valid_em, args, checkpoint_path, "best_dev")
 
-                    loss = curr_loss / args.eval_step
-                    curr_loss = 0
-                    logger.info(f"Evaluation")
-                    logger.info(f"  - Steps ... {step} / {args.total_steps}")
-                    logger.info(f"  - Train Loss ... {loss:.4f}")
-                    logger.info(f"  - Valid EM   ... {valid_em:.4f}")
-                    # logger.info(f"lr: {scheduler.get_last_lr()[0]:.5f}")
-                    if tb_logger is not None:
-                        tb_logger.add_scalar("Evaluation", valid_em, step)
-                        tb_logger.add_scalar("Training", loss, step)
+                        loss = curr_loss / args.eval_step
+                        curr_loss = 0
+                        logger.info(f"Evaluation")
+                        logger.info(f"  - Steps ... {step} / {args.total_steps}")
+                        logger.info(f"  - Train Loss ... {loss:.4f}")
+                        logger.info(f"  - Valid EM   ... {valid_em:.4f}")
+                        # logger.info(f"lr: {scheduler.get_last_lr()[0]:.5f}")
+                        if tb_logger is not None:
+                            tb_logger.add_scalar("Evaluation", valid_em, step)
+                            tb_logger.add_scalar("Training", loss, step)
 
-            if args.is_main and step % args.save_freq == 0:
-                util.save(model, optimizer, scheduler, step, best_valid_em, args, checkpoint_path, f"step-{step}")
-            if step > args.total_steps:
-                break
+                if args.is_main and step % args.save_freq == 0:
+                    util.save(model, optimizer, scheduler, step, best_valid_em, args, checkpoint_path, f"step-{step}")
+                if step > args.total_steps:
+                    break
+
+                pbar.update(1)
 
 
 def evaluate(args, dataset, collator, tokenizer, model):
@@ -158,8 +164,8 @@ if __name__ == "__main__":
     tokenizer = T5Tokenizer.from_pretrained(args.model_name_or_path)
     checkpoint_path = Path(args.checkpoint_dir) / args.name
     checkpoint_path.mkdir(parents=True, exist_ok=True)
-    model_path = args.model_path or (checkpoint_path / "checkpoint" / "latest")
-    if model_path:
+    model_path = args.model_name_or_path or (checkpoint_path / "checkpoint" / "latest")
+    if Path(model_path).is_file():
         logger.info(f"Model loaded from {model_path}")
         reset_params = args.model_path is not None
         model, optimizer, scheduler, opt_checkpoint, step, best_valid_em = \
