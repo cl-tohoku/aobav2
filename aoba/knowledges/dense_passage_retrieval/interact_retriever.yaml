@@ -1,0 +1,90 @@
+encoder:
+  encoder_model_type: hf_bert
+  pretrained_model_cfg: cl-tohoku/bert-base-japanese-whole-word-masking
+  pretrained_file:
+  projection_dim: 0
+  sequence_length: 256
+  dropout: 0.1
+  fix_ctx_encoder: False
+  pretrained: True
+
+datasets:
+  nq_test:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.nq-test
+  nq_train:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.nq-train
+  nq_dev:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.nq-dev
+  trivia_test:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.trivia-test
+  trivia_train:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.trivia-train
+  trivia_dev:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.trivia-dev
+  webq_test:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.webq-test
+  curatedtrec_test:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: data.retriever.qas.curatedtrec-test
+
+ctx_sources:
+  dpr_wiki:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: /work02/SLUD2021/models/dpr/formated_wikidump_threshold_19_unit-3.tsv
+    id_prefix: 'wiki:'
+
+indexers:
+  flat:
+    _target_: dpr.indexer.faiss_indexers.DenseFlatIndexer
+
+  hnsw:
+    _target_: dpr.indexer.faiss_indexers.DenseHNSWFlatIndexer
+
+  hnsw_sq:
+    _target_: dpr.indexer.faiss_indexers.DenseHNSWSQIndexer
+
+qa_dataset:
+
+ctx_datatsets: [dpr_wiki]
+
+encoded_ctx_files: [/work02/SLUD2021/models/dpr/emb_pv19-u3_biencoder.59.230.pickle]
+
+out_file:
+match: string
+n_docs: 100
+validation_workers: 16
+
+batch_size: 128
+
+do_lower_case: True
+
+encoder_path:
+
+index_path:
+
+kilt_out_file:
+
+model_file: /work02/SLUD2021/models/dpr/dpr_biencoder.59.230.pt
+
+validate_as_tables: False
+rpc_retriever_cfg_file:
+indexer: flat
+
+special_tokens:
+
+local_rank: -1
+global_loss_buf_sz: 150000
+device: cuda
+distributed_world_size:
+no_cuda: False
+n_gpu:
+fp16: False
+
+fp16_opt_level: O1
