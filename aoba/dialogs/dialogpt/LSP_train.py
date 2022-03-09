@@ -23,7 +23,7 @@ from torch.distributed import get_rank, get_world_size
 from env import SP_TOKENS, END_OF_TURN_TOKEN, END_OF_TEXT_TOKEN
 from lsp_model import GPT2LMHeadModel, GPT2Tokenizer, GPT2Config, Adam
 from transformers import T5Tokenizer, AutoModelForCausalLM
-from gpt2_training.train_utils import load_model, load_ja_model, boolean_string, set_lr, get_eval_list_same_length, load_model
+from gpt2_training.train_utils import load_model, load_rinna_medium, boolean_string, set_lr, get_eval_list_same_length, load_model
 from gpt2_training.eval_utils import eval_model_loss
 
 from data_loader import BucketingDataLoader, DynamicBatchingLoader, DistributedBucketingDataLoader
@@ -221,7 +221,7 @@ eval_dataloader_gen = get_eval_list_same_length(
 # Prepare Model and Optimizer
 ##########################################################################
 if args.ja:
-    model = load_ja_model(GPT2LMHeadModel(config), _model,
+    model = load_rinna_medium(GPT2LMHeadModel(config), _model,
                   args, verbose=True)
 else:
     model = load_model(GPT2LMHeadModel(config), args.init_checkpoint,
