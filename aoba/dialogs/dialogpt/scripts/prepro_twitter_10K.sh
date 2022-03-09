@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 USAGE="bash $0 [qsub]"
 
 PYENV_NAME=$(pyenv version | awk -F ' ' '{print $1}')
@@ -12,7 +14,7 @@ FI_TRAIN_CON=$DIR_DATA/train_10K.context
 FI_TRAIN_RES=$DIR_DATA/train_10K.response
 FI_VALID_CON=$DIR_DATA/valid_full.context
 FI_VALID_RES=$DIR_DATA/valid_full.response
-DEST=/groups2/gcb50246/ariyama/SLUD2021/DialoGPT/
+DEST=/groups2/gcb50246/miyawaki/SLUD2021/DialoGPT
 
 
 if [ "$1" = "qsub" ] ; then
