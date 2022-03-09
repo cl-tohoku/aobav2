@@ -1,0 +1,3 @@
+wiki_knowledge: "/work02/SLUD2021/datasets/wikipedia/template/wiki_withtxt.jsonl.gz"
+wiki_response_template: "data/wiki_template_dialog/response_templates.jsonl"
+wiki_context_template: "data/wiki_template_dialog/context_templates.json"

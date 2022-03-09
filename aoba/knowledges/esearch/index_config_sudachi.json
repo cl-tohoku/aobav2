@@ -1,0 +1,69 @@
+{
+    "settings" : {
+        "index": {
+            "analysis": {
+                "char_filter": {
+                    "normalizer": {
+                        "type": "icu_normalizer"
+                    }
+                },
+                "tokenizer": {
+                    "sudachi_tokenizer": {
+                        "type": "sudachi_tokenizer",
+                        "split_mode": "C",
+                        "additional_settings": {
+                            "userDict": "/work02/SLUD2021/github/src/submodules/wikipedia/dicts/sudachi-dictionary-20210802/system_full.dic"
+                        }
+                    }
+                },
+                "filter":{
+                    "my_posfilter":{
+                        "type":"sudachi_part_of_speech",
+                        "stoptags":[
+                            "代名詞",
+                            "形状詞,助動詞語幹",
+                            "連体詞",
+                            "副詞",
+                            "感動詞",
+                            "形容詞",
+                            "助動詞",
+                            "助詞",
+                            "補助記号,一般",
+                            "補助記号,句点",
+                            "補助記号,読点",
+                            "補助記号,ＡＡ,顔文字",
+                            "空白"
+                        ]
+                    }
+                },
+                "analyzer": {
+                    "sudachi_analyzer":{
+                        "char_filter": "normalizer",
+                        "filter": [ "sudachi_normalizedform", "my_posfilter" ],
+                        "tokenizer": "sudachi_tokenizer",
+                        "type": "custom"
+                    }
+                }
+            }
+        }
+    },
+    "mappings": {
+        "properties": {
+            "title": {
+                "type": "text",
+                "similarity": "BM25",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 8191
+                    }
+                }
+            },
+            "text": {
+                "type": "text",
+                "similarity": "BM25"
+            }
+            
+        }
+    }
+}

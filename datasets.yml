@@ -1,0 +1,7 @@
+dailydialog:
+  path:
+    train: /work02/SLUD2021/datasets/dialogue/en/dailydialog/train.json
+    valid: /work02/SLUD2021/datasets/dialogue/en/dailydialog/valid.json
+    test: /work02/SLUD2021/datasets/dialogue/en/dailydialog/test.json
+  format: formats.dailydialog
+  class: DailyDialog

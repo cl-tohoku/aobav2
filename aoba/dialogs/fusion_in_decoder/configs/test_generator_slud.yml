@@ -1,0 +1,18 @@
+# experiment
+name: "generator_slud_test"
+seed: 2021
+
+# dataset
+train_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/rcqa2/retrieved/train_rcqa_50.230.json"
+eval_data: "/groups/gcd50664/miyawaki/DPR_for_AIO/jaqket2/retrieved/aio_2020_dev_50.230.json"
+checkpoint_dir: "/groups/1/gcb50246/migrated_from_SFA_GPFS/miyawaki/FiD/models/jaqket"
+
+# model 
+model_name_or_path: "sonoisa/t5-base-japanese"
+model_path: ""
+n_context: 60
+text_maxlength: 250
+
+# others
+per_gpu_batch_size: 1
+write_results: true
