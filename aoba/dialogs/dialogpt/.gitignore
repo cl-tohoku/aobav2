@@ -1,0 +1,9 @@
+**/__pycache__
+**/experiments
+**/models
+**/datasets
+**/work
+**/tmp
+
+.python-versions
+requirements.txt
