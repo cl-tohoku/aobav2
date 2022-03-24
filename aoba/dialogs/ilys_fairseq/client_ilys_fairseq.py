@@ -8,7 +8,7 @@ from logzero import logger
 
 from fairseq import options
 
-from bot_our_fairseq_model import OurFairSeqModel
+from bot_ilys_model import IlysFairSeqModel
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
     group.add_argument('--host', default=socket.gethostbyname(socket.gethostname()))
     args = options.parse_args_and_arch(parser)
 
-    fairseq_model = OurFairSeqModel(args)
+    fairseq_model = IlysFairSeqModel(args)
     context_list, prob_list = [], []
 
     # socket

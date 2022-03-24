@@ -2,26 +2,7 @@
 
 ## Telegram での実行
 
-- [対話システムライブコンペティション４#GettingStarted](https://dialog-system-live-competition.github.io/dslc4/gettingstart.html)
-
-### 準備
-
-```bash
-# Mac のローカル環境で
-$ brew cask install telegram
-```
-
-### bot 作成手順
-
-1. Telegram の bot 検索画面で「BotFather」を検索
-2. BotFather に対して `/newbot` とメッセージを送る
-3. BotFather の返信メッセージに従って bot 名などを入力
-4. Done! Congratulations on your new bot... というメッセージが来たら bot 作成完了
-5. API トークンを控えておく（bot 実行時に使用）
-
-### 実行
-
-TBA
+![./deploy](./deploy) ディレクトリを参照
 
 
 ## ディレクトリ構造
@@ -67,8 +48,6 @@ TBA
             - index_config_sudachi.json:
             - register_docs_async_icu_normalizer.py:   jsonl データを ES に登録する
             - es_search.py:                            登録した index_name を用いて検索
-    # telegram
-    - telegrams/: TBA
 
 # 前処理などで参照するデータ（学習データは置かない）
 - data/:
@@ -92,6 +71,11 @@ TBA
     - formats/:
         - base.py:
         - dailydialog.py:                   DailyDialog データ List[Dialog] の形式で読み込む
+
+# telegram
+- deploy/:
+    - run_telegram.py:
+    - telegrams/:
 
 # lib
 - lib/:

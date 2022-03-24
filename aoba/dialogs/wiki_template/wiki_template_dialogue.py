@@ -231,5 +231,7 @@ if __name__ == "__main__":
     template_dialogue = WikipediaTemplateDialogue()
     context = "東京タワーって知ってますか？"
     response = template_dialogue(context)
-    print(context)
-    print(response)
+    if response:
+        knowledge, response = response
+        print(context)
+        print(response)

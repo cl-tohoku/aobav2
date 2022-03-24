@@ -16,6 +16,6 @@ setup(
     author="TohokuNLP",
     install_requires=requirements,
     extras_require={
-        "develop": develop_reqiorements,
+        "develop": develop_requirements,
     },
 )
