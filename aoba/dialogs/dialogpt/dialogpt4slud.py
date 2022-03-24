@@ -158,7 +158,7 @@ class DialoGptModel(object):
             return None
 
 
-def run():
+def interactive():
     parser = argparse.ArgumentParser(description="")
     parser = DialoGptModel.add_parser(parser)
     args = parser.parse_args()
@@ -181,5 +181,5 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    interactive()
 

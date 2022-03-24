@@ -2,7 +2,7 @@
 
 ## Telegram での実行
 
-![./deploy](./deploy) ディレクトリを参照
+[./deploy](./deploy) ディレクトリを参照
 
 
 ## ディレクトリ構造
@@ -83,7 +83,7 @@
     - giza-pp/:                             scripts/set_giza.sh
 ```
 
-## filters
+## 前処理モジュール
 
 ```py
 from aoba import (
@@ -146,16 +146,90 @@ result = evaluator(
 )
 ```
 
-## dialogs
+## 知識モジュール
+
+### Elastic Search
+
+* [./aoba/knowledges/esearch/README.md](./aoba/knowledges/esearch/README.md) を参照
+* ElasticStack について詳しく知りたい場合は、以下の書籍がおすすめ（python による解説は残念ながらない）
+  * [ElasticStack 実践ガイド（Amazon）](https://www.amazon.co.jp/-/en/%E6%83%A3%E9%81%93-%E5%93%B2%E4%B9%9F/dp/4295009776/ref=pd_lpo_1?pd_rd_i=4295009776&psc=1)
+
+
+### Dense Passage Retrieval
+
+* https://github.com/cl-tohoku/AIO2_DPR_baseline
+
+```python
+from omegaconf import OmegaConf
+from aoba import DenseExtractor
+
+cfg = OmegaConf.load(open("aoba/knowledges/dense_passage_retrieval/interact_retriever.yml"))
+dense_extractor = DenseExtractor(cfg)
+
+query = "東京都港区芝公園にある総合電波塔の名前は何？"
+retrieved_passages = dense_extractor(query, n_docs=5)
+print(retrieved_passages[0])
+
+{
+    'id': 'wiki:1212368',
+    'score': 44.463657,
+    'title': '東京タワー',
+    'text': '東京タワーは、日本の東京都港区芝公園にある総合電波塔の愛称である。正式名称は日本電波塔。創設者は前田久吉。'
+}
+```
+
+## 対話モデル
+
+### Wikipedia テンプレート応答
 
 ```py
-from aoba import (
-    WikipediaTemplateDialogue
-)
+from aoba import WikipediaTemplateDialogue
 
-# Wikipedia テンプレート応答
 template_dialogue = WikipediaTemplateDialogue()
 response = template_dialogue("東京タワーって知ってる？")
+```
+
+### Fusion-in-Decoder
+
+```py
+import argparse
+from omegaconf import OmegaConf
+from aoba import DenseExtractor, FidModel
+
+cfg = OmegaConf.load(open("aoba/knowledges/dense_passage_retrieval/interact_retriever.yml"))
+dense_extractor = DenseExtractor(cfg)
+
+parser = argparse.ArgumentParser()
+parser = FidModel.add_parser(parser)
+args = parser.parse_args()
+decoder = FidModel(args)
+
+query = "東京都港区にある東京タワーは何の建物ですか？"
+retrieved_passages = dense_extractor(query, n_docs=5)
+input_data = FidModel.convert_retrieved_psgs(query, retrieved_passages)
+responses = decoder(input_data)
+responses[0]
+
+"東京都港区芝公園にある総合電波塔の愛称である。正式名称は日本電波塔。創設者は前田久吉。"
+```
+
+### DialoGPT
+
+```py
+import argparse
+from aoba import DialoGptModel
+
+parser = argparse.ArgumentParser(description="")
+parser = DialoGptModel.add_parser(parser)
+args = parser.parse_args()
+
+decoder = DialoGptModel(args)
+
+history = ["おはようございます"]
+response = decoder(history, num_beams=5)
+responses[0]
+
+"おはようございます。今日も一日頑張りましょう。"
 ```
 
 

@@ -9,11 +9,10 @@
  Command line tool to get dense results and validate them
 """
 
-import argparse
 import glob
 import json
 import logging
-import os
+from os.path import dirname
 import pickle
 import re
 import sys
@@ -27,6 +26,8 @@ import torch
 from omegaconf import DictConfig, OmegaConf
 from torch import Tensor as T
 from torch import nn
+
+sys.path.append(dirname(__file__))
 
 from dpr.data.biencoder_data import RepTokenSelector, BiEncoderPassage
 from dpr.data.qa_validation import calculate_matches, calculate_chunked_matches
@@ -189,9 +190,7 @@ class DenseRetriever(object):
 
 
 class LocalFaissRetriever(DenseRetriever):
-    """
-    Does passage retrieving over the provided index and question encoder
-    """
+    """ Does passage retrieving over the provided index and question encoder """
 
     def __init__(
         self,
@@ -343,8 +342,7 @@ def validate_tables(
     return match_stats.top_k_chunk_hits
 
 
-
-class DenseExtractor():
+class DenseExtractor(object):
 
     def __init__(self, cfg: DictConfig):
         cfg = self.set_config(cfg)
@@ -553,9 +551,8 @@ class DenseExtractor():
             print(f'| WRITE ... {fo.name}')
 
 
-def main():
-    # cfg = OmegaConf.load(open('interact_retriever.yaml'))
-    cfg = OmegaConf.load(open('/work02/SLUD2021/models/dpr/interact_retriever.yaml'))
+def interactive():
+    cfg = OmegaConf.load(open("interact_retriever.yml"))
     dense_extractor = DenseExtractor(cfg)
     
     while True:
@@ -570,14 +567,13 @@ def main():
             query_tensor = dense_extractor.encode_query(query)
             passage_tensor = dense_extractor.encode_passage(retrieved_passages[0]['text'])
             passage_tensors = dense_extractor.encode_passage(retrieved_passages)
-            import ipdb; ipdb.set_trace()
 
         except KeyboardInterrupt:
             sys.exit(0)
 
 
 def extract_related_passages_for_response():
-    cfg = OmegaConf.load(open('interact_retriever.yaml'))
+    cfg = OmegaConf.load(open('interact_retriever.yml'))
     context_file = "/work02/SLUD2021/datasets/dialogue/ja/twitter/pretraining/train_4.5M_w_ne.context"
     response_file = "/work02/SLUD2021/datasets/dialogue/ja/twitter/pretraining/train_4.5M_w_ne.response"
     out_file = response_file.replace('.response', '_response_w_knowledge.json')
@@ -587,4 +583,4 @@ def extract_related_passages_for_response():
 
 if __name__ == "__main__":
     # extract_related_passages_for_response()
-    main()
+    interactive()

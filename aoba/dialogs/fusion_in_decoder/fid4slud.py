@@ -20,7 +20,7 @@ from pathlib import Path
 import torch.distributed as dist
 from torch.utils.data import DataLoader, SequentialSampler
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 import fid.slurm
 import fid.util
 from fid.options import Options
@@ -28,14 +28,14 @@ import fid.data
 import fid.evaluation
 import fid.model
 
-sys.path.append(path.join(path.dirname(__file__), '../../'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 from knowledges import DenseExtractor
 
 
 class FidModel(object):
     @classmethod
     def add_parser(cls, parser):
-        parser.add_argument('--fid_config', default='./config.json')
+        parser.add_argument('--fid_config', default=os.path.join(os.path.dirname(__file__), 'configs/client_fid.json'))
         return parser
  
     def __init__(self, args):
@@ -43,7 +43,7 @@ class FidModel(object):
         self.args = args
         self.model = self.init_model(args)
         self.tokenizer = self.init_toker(args)
-        self.collator_function = FiD.src.data.Collator(args.text_maxlength, self.tokenizer)
+        self.collator_function = fid.data.Collator(self.tokenizer, args.text_maxlength)
 
     def __postinit__(self, _args):
         args = copy.deepcopy(_args)
@@ -53,8 +53,8 @@ class FidModel(object):
             if k not in override_keys:
                 setattr(args, k, v)
 
-        FiD.src.slurm.init_distributed_mode(args)
-        FiD.src.slurm.init_signal_handler()
+        fid.slurm.init_distributed_mode(args)
+        fid.slurm.init_signal_handler()
 
         dir_path = Path(args.checkpoint_dir)/args.name
         directory_exists = dir_path.exists()
@@ -64,7 +64,7 @@ class FidModel(object):
         return args
 
     def init_model(self, args):
-        model_class = FiD.src.model.FiDT5
+        model_class = fid.model.FiDT5
         model = model_class.from_pretrained(args.model_path)
         model = model.to(args.device)
         model.eval()
@@ -139,7 +139,8 @@ def main():
     parser = FidModel.add_parser(parser)
     args = parser.parse_args()
     
-    cfg = OmegaConf.load(open('/work02/SLUD2021/models/dpr/interact_retriever.yaml'))
+    retriever_config = os.path.join(os.path.dirname(__file__), "../../knowledges/dense_passage_retrieval/interact_retriever.yml")
+    cfg = OmegaConf.load(open(retriever_config))
     dense_extractor = DenseExtractor(cfg)
     decoder = FidModel(args)
     

@@ -1,8 +1,6 @@
-import os
+from os.path import dirname
 import sys
 
-sys.path.append(os.path.dirname(__file__))
-
-# TopicExtractor
+sys.path.append(dirname(__file__))
 
 from dense_passage_retrieval.dpr4slud import DenseExtractor
