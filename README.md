@@ -72,10 +72,7 @@ git clone --recursive git@github.com:cl-tohoku/aobav2.git
 # 前処理
 - datasets.yml:                             データセットと読み込みモジュール
 - prepro/:
-    - convert_format.py:                    List[Dialog] の形式に変換する（Dialog = ["こんにちは", "いい天気ですね", ...]）
-    - formats/:
-        - base.py:
-        - dailydialog.py:                   DailyDialog データ List[Dialog] の形式で読み込む
+    - create_parallel_corpus.py:            .context/.response ファイルの作成
 
 # telegram
 - deploy/:

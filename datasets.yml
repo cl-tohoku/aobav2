@@ -1,7 +1,23 @@
+blended_skill_talk:
+  train: /work02/SLUD2021/datasets/dialogue/en/blended_skill_talk/train.json.gz
+  valid: /work02/SLUD2021/datasets/dialogue/en/blended_skill_talk/valid.json.gz
+  test:  /work02/SLUD2021/datasets/dialogue/en/blended_skill_talk/test.json.gz
+
+convai2:
+  train: /work02/SLUD2021/datasets/dialogue/en/convai2/train_both_original_no_cands.jsonl.gz
+  valid: /work02/SLUD2021/datasets/dialogue/en/convai2/valid_both_original_no_cands.jsonl.gz
+
 dailydialog:
-  path:
-    train: /work02/SLUD2021/datasets/dialogue/en/dailydialog/train.json
-    valid: /work02/SLUD2021/datasets/dialogue/en/dailydialog/valid.json
-    test: /work02/SLUD2021/datasets/dialogue/en/dailydialog/test.json
-  format: formats.dailydialog
-  class: DailyDialog
+  train: /work02/SLUD2021/datasets/dialogue/en/dailydialog/train.jsonl.gz
+  valid: /work02/SLUD2021/datasets/dialogue/en/dailydialog/valid.jsonl.gz
+  test:  /work02/SLUD2021/datasets/dialogue/en/dailydialog/test.jsonl.gz
+
+empathetic_dialogues:
+  train: /work02/SLUD2021/datasets/dialogue/en/empathetic_dialogues/train.jsonl.gz
+  valid: /work02/SLUD2021/datasets/dialogue/en/empathetic_dialogues/valid.jsonl.gz
+  test:  /work02/SLUD2021/datasets/dialogue/en/empathetic_dialogues/test.jsonl.gz
+
+wizard_of_wikipedia:
+  train: /work02/SLUD2021/datasets/dialogue/en/wizard_of_wikipedia/train.jsonl.gz
+  valid: /work02/SLUD2021/datasets/dialogue/en/wizard_of_wikipedia/valid.jsonl.gz
+  test:  /work02/SLUD2021/datasets/dialogue/en/wizard_of_wikipedia/test.jsonl.gz
