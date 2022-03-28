@@ -3,6 +3,6 @@
 **/outputs/
 **/tmp/
 **/work/
-lib/giza-pp/
+lib
 
 .python-version

@@ -1,5 +1,10 @@
 # aobav2 bot
 
+```bash
+git clone --recursive git@github.com:cl-tohoku/aobav2.git
+# git submodule update --init --recursive
+```
+
 ## Telegram での実行
 
 [./deploy](./deploy) ディレクトリを参照

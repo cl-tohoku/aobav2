@@ -26,7 +26,7 @@ from fairseq.dataclass.utils import convert_namespace_to_omegaconf
 from fairseq.token_generation_constraints import pack_constraints, unpack_constraints
 from fairseq_cli.generate import get_symbols_to_strip_from_output
 
-from bot_tokenizer import SpmTokenizer
+from tokenizer import SpmTokenizer
 
 
 
@@ -42,7 +42,7 @@ logger = logging.getLogger("fairseq_cli.interactive")
 Batch = namedtuple("Batch", "ids src_tokens src_lengths constraints")
 Translation = namedtuple("Translation", "src_str hypos pos_scores alignments")
 
-class OurFairSeqModel:
+class IlysFairseqModel:
     def __init__(self, args: Namespace):
         self.args = args
         self.cfg = convert_namespace_to_omegaconf(self.args)
@@ -55,6 +55,11 @@ class OurFairSeqModel:
         self.max_positions = self._load_max_positions(self.models, self.task)
         self.generator = self.task.build_generator(self.models, self.cfg.generation)
         self.usecuda = True
+    
+    @classmethod
+    def add_parser(cls, parser):
+        parser.add_argument('--spm', type=os.path.abspath, default="/work02/SLUD2021/models/spm/8M_tweets.cr9999.bpe.32000.model", metavar="FP", help="Path to sentencepiece model")
+        return parser
 
     def __call__(self, contexts: List[str], prefix: Union[str, List[str]] = None) -> List[str]:
         tokenized_contexts = [self.tokenizer.encode(utt) for utt in contexts]
@@ -218,3 +223,17 @@ def send_to_cuda(device_index: int, tensor):
         return tensor.to(torch.device(device_index))
     else:
         return tensor.cuda()
+
+
+
+
+if __name__ == "__main__":
+    parser = options.get_interactive_generation_parser()
+    parser = IlysFairseqModel.add_parser(parser)
+    args = options.parse_args_and_arch(parser)
+
+    decoder = IlysFairseqModel(args)
+    contexts = ["こんにちは"]
+    responses = decoder(contexts)
+
+    print(responses)
