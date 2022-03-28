@@ -5,12 +5,7 @@
 - https://github.com/cl-tohoku/wmt2020-resources
 
 ```bash
-$ git clone git@github.com:cl-tohoku/wmt2020-resources.git
-$ cd wmt2020-resources
 $ git clone --depth 1 https://github.com/moses-smt/mosesdecoder
-$ git clone git@github.com:cl-tohoku/fairseq.git
-$ cd fairseq
-$ pip install -e .
 ```
 
 ### 翻訳対象のデータセット

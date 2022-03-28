@@ -19,15 +19,20 @@ from aoba import (
 
 
 parser = argparse.ArgumentParser(description="Twitter データの前処理")
-parser.add_argument("--fi_context", type=str, help="path to input context file")
-parser.add_argument("--fi_response", type=str, help="path to input response file")
-parser.add_argument("--fo_context", type=str, help="path to output context file")
-parser.add_argument("--fo_response", type=str, help="path to output response file")
-parser.add_argument("--fi_config", type=str, help="path to output response file")
+parser.add_argument("--ddir", type=str, help="path to input context file")
+parser.add_argument("--basename", type=str, help="path to input response file")
+parser.add_argument("--dest", type=str, default=None, help="path to output context file")
+parser.add_argument("--fi_config", type=str, default=f"{ROOT_REPOSITORY}/params_prepro.yml", help="path to output response file")
 
 args = parser.parse_args()
 for key, value in OmegaConf.load(args.f_cfg).__dict__.items():
     setattr(args, key, value)
+
+args.fi_context  = Path(args.ddir) / f"{args.basename}.context"
+args.fi_response = Path(args.ddir) / f"{args.basename}.response"
+dest = args.dest if args.dest is not None else args.ddir
+args.fo_context  = Path(dest) / f"filtered_{args.basename}.context"
+args.fo_response = Path(dest) / f"filtered_{args.basename}.response"
 
 tagger = MecabParser()
 normalizer = SentenceNormalizer()

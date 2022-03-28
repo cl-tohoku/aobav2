@@ -1,3 +1,6 @@
 [submodule "aoba/dialogs/nttcs_fairseq"]
 	path = aoba/dialogs/nttcs_fairseq
 	url = git@github.com:cl-tohoku/japanese-dialog-transformers.git
+[submodule "aoba/translators/mosesdecoder"]
+	path = aoba/translators/mosesdecoder
+	url = https://github.com/moses-smt/mosesdecoder
