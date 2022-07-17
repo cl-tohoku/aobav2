@@ -1,0 +1,12 @@
+# @package _group_
+
+api_token: ???
+host: ???
+
+dialogue_agent: "telegrams.dialogue_agents.BaseDialogueAgent"
+
+start_message: "こんにちは"
+max_len_contexts: 10
+max_turn: 30
+
+log_prefix: "log.txt"

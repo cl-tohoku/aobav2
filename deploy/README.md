@@ -2,14 +2,14 @@
 
 - [対話システムライブコンペティション４#GettingStarted](https://dialog-system-live-competition.github.io/dslc4/gettingstart.html)
 
- 準備
+## 準備
 
 ```bash
 # Mac のローカル環境で
 $ brew cask install telegram
 ```
 
-## bot 作成手順
+### bot 作成手順
 
 1. Telegram の bot 検索画面で「BotFather」を検索
 2. BotFather に対して `/newbot` とメッセージを送る
@@ -17,21 +17,54 @@ $ brew cask install telegram
 4. Done! Congratulations on your new bot... というメッセージが来たら bot 作成完了
 5. API トークンを控えておく（bot 実行時に使用）
 
+
+## ディレクトリ構成
+
+```yaml
+# パラメータ引数
+- configs/: 実行時のパラメータ引数（下記参照）
+- outputs/: hydra のログ掃き溜め
+
+# 実行関連
+- run_telegram.py: telegram のボットを立ち上げる
+- scripts/:
+  - run_telegram.sh: run_telegram.py を実行するシェルスクリプト
+
+# Python スクリプト
+- telegrams/:
+  - 
+```
+
+
 ## 実行
 
 ```bash
-API={telegram api}
-HOST=$(hostname -I | awk -F ' ' '{print $1}')
+$ python scripts/run_telegram.sh $API_TOKEN
 
-python run_telegram.py --api_token ${API} --yaml_args ${configs.yml}
-
-# ターミナル出力で以下が表示されるので、以下の手順を進める
-# |--> Waiting for a connection from {client_name} model ::: {self.host}
+# run_telegram.sh は、以下を実行する
+$ python run_telegram.py \
+  telegram.api_token ${API_TOKEN} \
+  telegram.host ${HOST} \
+  aobav1.port 42000 \
+  dialogpt.port 45000 \
+  fid.port 50000 \
+  nttcs.port 40000
 ```
 
-`ROOT_REPOSITORY/aoba/dialogs` 下のプロジェクト `{project_path}` に移動して以下を実行
+実行時のパラメータ引数は hydra を用いて `configs/` 下に管理されている。
 
-```bash
-cd {project_path}
-bash run_client.sh
+```yaml
+- configs/
+  - deploy.yaml: dispatch
+  - common/: 一般
+
+  # モデルに関するパラメータ設定
+  - aobav1/:
+  - dialogpt/:
+  - fid/:
+  - nttcs/:
+  - wiki_template/:
+
+  # 後処理に関するパラメータ設定
+  - post_processor/:
 ```

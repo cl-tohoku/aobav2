@@ -1,0 +1,21 @@
+# @package _group_
+
+sif_param: 1e-3
+
+init_wordfreq_fname: null
+
+# Cands with lower inf_score_than this thr are eliminated
+inf_thr: 3.
+
+jac_thr: 0.3
+user_jac_thr: 1.
+mix_jac_thr: 0.2
+
+duplicate_score_thr: 0.55
+next_uttr_thr: 0.99
+select_by_information: false
+
+incremental_thr_value: 0.05
+jsnli_model_fname: null
+filter_by_jsnli: false
+filter_by_prev_jsnli: false

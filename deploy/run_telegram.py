@@ -1,25 +1,23 @@
-from os import path
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 import time
 from typing import Dict
 
 from logzero import logger
 
+import hydra
+from omegaconf import DictConfig, OmegaConf
+
 import telegram
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-sys.path.append(path.dirname(__file__))
-from telegrams import create_args, UserContexts, DialogueAgent
+# from telegrams import UserContexts, DialogueAgent
 
-
-def telegram_cmd(tag):
-    def _telegram_cmd(func):
-        def wrapper(*args, **kwargs):
-            logger.info("\033[34m" + f"|--> {tag}" + "\033[0m")
-            return func(*args, **kwargs)
-        return wrapper
-    return _telegram_cmd
+from telegrams.user_contexts import UserContexts
+from telegrams.utils import telegram_cmd, get_module
 
 
 class TelegramAgent(object):
@@ -38,10 +36,11 @@ class TelegramAgent(object):
         self.user_contexts_dict: Dict[int, UserContexts] = dict()
         self.max_turn = max_turn
 
-    def create_user_contexts(self, update: Update, start: bool = False) -> UserContexts:
+    def create_user_contexts(self, update:Update, start:bool=False) -> UserContexts:
+        """ UserContexts を作成 """
         user_id: int = update.message.from_user.id
-        first_name: str = update.message.from_user.first_name
-        last_name: str = update.message.from_user.last_name
+        first_name: str = update.message.from_user.first_name   # Shumpei
+        last_name: str = update.message.from_user.last_name     # Miyawaki
         if start or user_id not in self.user_contexts_dict:
             return UserContexts(
                 bot_name=self.bot_name,
@@ -59,9 +58,13 @@ class TelegramAgent(object):
 
     @telegram_cmd("/start")
     def _start(self, update: Update, context: CallbackContext):
-        user_contexts = self.create_user_contexts(update, start=True)
+        # UserContexts の作成
+        user_contexts: UserContexts = self.create_user_contexts(update, start=True)
+        # モデルから Response (first message) を取得
         response, user_contexts = self.dialogue_agent(utterance="", user_contexts=user_contexts)
+        # UserContexts の更新
         self.update_user_contexts(user_contexts)
+        # リプライ
         update.message.reply_text(response)
 
     @telegram_cmd("/help")
@@ -119,6 +122,7 @@ class TelegramAgent(object):
         """ エージェント間でメッセージをやり取りする """
         received_text = update.message.text
         user_contexts = self.create_user_contexts(update)
+        # モデルから Response を取得
         response, user_contexts = self.dialogue_agent(utterance=received_text, user_contexts=user_contexts)
         self.update_user_contexts(user_contexts)
         update.message.reply_text(response)
@@ -156,29 +160,28 @@ class TelegramAgent(object):
 
 
 
-def main():
-    args = create_args()
-
-    bot = telegram.Bot(token = args.api_token)
+@hydra.main(config_path="configs", config_name="deploy")
+def main(cfg: DictConfig):
+    print(OmegaConf.to_yaml(cfg))
+    bot = telegram.Bot(token=cfg.common.api_token)
     bot_information = bot.get_me()
     bot_name = bot_information.first_name
-    logger.info("Bot name: {}".format(bot_name))
-    logger.info("Bot username: {}".format(bot_information.username))
+    # logger.info("Bot name: {}".format(bot_name))
+    # logger.info("Bot username: {}".format(bot_information.username))
 
-    dialogue_agent = DialogueAgent(args, max_turn=args.max_turn)
+    dialogue_agent = get_module(cfg.common.dialogue_agent)
+    print(dialogue_agent)
+    # # dialogue_agent = DialogueAgent(args, max_turn=args.max_turn)
 
     telegram_bot = TelegramAgent(
-        api_token = args.api_token,
+        api_token = cfg.common.api_token,
         bot_name = bot_name,
         dialogue_agent = dialogue_agent,
-        max_len_contexts = args.max_len_contexts,
-        max_turn = args.max_turn+1
+        max_len_contexts = cfg.common.max_len_contexts,
+        max_turn = cfg.common.max_turn+1
     )
     telegram_bot.run()
 
 
 if __name__ == "__main__":
-    """ bash
-    python $0 --api_token {API} --yaml_args {CFG}
-    """
     main()
