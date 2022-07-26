@@ -14,8 +14,6 @@ import telegram
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-# from telegrams import UserContexts, DialogueAgent
-
 from telegrams.user_contexts import UserContexts
 from telegrams.utils import telegram_cmd, get_module
 
@@ -166,12 +164,10 @@ def main(cfg: DictConfig):
     bot = telegram.Bot(token=cfg.common.api_token)
     bot_information = bot.get_me()
     bot_name = bot_information.first_name
-    # logger.info("Bot name: {}".format(bot_name))
-    # logger.info("Bot username: {}".format(bot_information.username))
+    logger.info("Bot name: {}".format(bot_name))
+    logger.info("Bot username: {}".format(bot_information.username))
 
     dialogue_agent = get_module(cfg.common.dialogue_agent)
-    print(dialogue_agent)
-    # # dialogue_agent = DialogueAgent(args, max_turn=args.max_turn)
 
     telegram_bot = TelegramAgent(
         api_token = cfg.common.api_token,

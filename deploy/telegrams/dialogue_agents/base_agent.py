@@ -7,7 +7,7 @@ from typing import Tuple, List
 
 from logzero import logger
 
-from .. import UserContexts
+from .. import UserContexts, DialogueInstance
 
 RED = '\033[31m'
 GREEN = '\033[32m'
@@ -24,7 +24,7 @@ class BaseDialogueAgent(object):
         self.bot_name = "あおば"
         self.user_name = ""
         self.model_name = "Dialogue Model"
-        self.end_turn = 30
+        self.end_turn = 8
 
     def set_user(self, user_contexts: UserContexts):
         """ UserContexts からユーザ情報を登録 """
@@ -51,8 +51,8 @@ class BaseDialogueAgent(object):
     @abstractmethod
     def get_response_candidates(self, user_contexts: UserContexts) -> List[typeResponse]:
         """ 応答候補 List[typeResponse] を取得 """
-        utterance = user_contexts.full_contexts[-1]
-        return [utterance]
+        dialogue_instance = user_contexts.full_contexts[-1]
+        return [dialogue_instance.utterance]
 
     @abstractmethod
     def select_response(self, response_candidates:List[typeResponse]) -> typeResponse:
@@ -73,21 +73,21 @@ class BaseDialogueAgent(object):
         logger.info(f"--------- No. {user_contexts.n_turns} --------")
         # logger.info(f"* bot_name:  {user_contexts.bot_name}")
         # logger.info(f"* user_name: {user_contexts.user_name}")
-        for idx, (user, context) in enumerate(zip(user_contexts.full_users, user_contexts.full_contexts)):
-            logger.info(f"No.{idx} [{user}] {context}")
+        for idx, dialogue_instance in enumerate(user_contexts.full_contexts):
+            logger.info(str(dialogue_instance))
 
         # 対話開始時の処理
         if utterance == "" and user_contexts.n_turns == 0:
             response = self.first_response
-            logger.info("first message (response): {}".format(response))
-            user_contexts.n_turns += 1
-            user_contexts.full_contexts.append(response)
-            user_contexts.full_users.append(self.model_name)
+            user_contexts.add_context(response, self.model_name)
+            logger.info(str(user_contexts[-1]))
             return response, user_contexts
 
         # UserContext を更新: ユーザ発話を追加
         user_contexts.add_context(utterance, user_contexts.user_name)
-        logger.info(f"No.{len(user_contexts)-1} [{self.user_name}] {utterance}")    # 0 start
+        logger.info(str(user_contexts[-1]))
+        
+        logger.info(user_contexts.n_turns)
 
         ##################################################
         # モデルからの応答を取得
@@ -101,23 +101,18 @@ class BaseDialogueAgent(object):
             response: typeResponse = self.select_response(response_candidates)
 
             # 対話終了一つ前
-            if user_contexts.n_turns == self.end_turn-1:
+            if user_contexts.n_turns == self.end_turn-3:
                 response += self.before_last_response
 
             # UserContext を更新: モデル応答を追加
             user_contexts.add_context(response, self.model_name)
-            logger.info(
-                YELLOW 
-                + f"No.{len(user_contexts)-1} [{self.model_name}] {utterance}    #selected response"
-                + END
-            )
-
+            logger.info(str(user_contexts[-1]))
             return response, user_contexts
 
-        elif user_contexts.n_turns == self.end_turn:
-            logger.info("response: {}".format(self.last_response))
+        elif user_contexts.n_turns == self.end_turn-3:
             user_contexts.add_context(self.last_response, self.model_name)
-            return response, user_contexts
+            logger.info(str(user_contexts[-1]))
+            return self.last_response, user_contexts
 
         else:
             raise NotImplementedError("The termination processing was not executed successfully.")

@@ -51,7 +51,7 @@ $ python run_telegram.py \
   nttcs.port 40000
 ```
 
-実行時のパラメータ引数は hydra を用いて `configs/` 下に管理されている。
+実行時のパラメータ引数は hydra を用いており `configs/` 下に yaml ファイルで管理されている。
 
 ```yaml
 - configs/

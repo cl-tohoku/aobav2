@@ -1,4 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import dataclasses
 from typing import List, Tuple
+
+
+
+@dataclasses.dataclass
+class DialogueInstance:
+    turn: int
+    user: str
+    utterance: str
+    def __str__(self):
+        return f"No.{self.turn} [{self.user}] {self.utterance}"
 
 
 class UserContexts:
@@ -19,21 +33,27 @@ class UserContexts:
     def __len__(self) -> int:
         return len(self.full_contexts[-self.max_len_contexts:])
 
+    def __getitem__(self, idx:int) -> DialogueInstance:
+        return self.full_contexts[idx]
+
     def add_context(self, utterance:str, user:str) -> None:
         # self.contexts.append(utterance)
         # self.users.append(user)
         # self.contexts = self.contexts[-self.max_len_contexts:]
         # self.users = self.users[-self.max_len_contexts:]
         self.n_turns += 1
-        # assert len(self.contexts) == len(self.users)
-
-        self.full_contexts.append(utterance)
-        self.full_users.append(user)
+        self.full_contexts.append(
+            DialogueInstance(
+                turn=self.n_turns,
+                user=user,
+                utterance=utterance,
+            )
+        )
 
     def initialize(self) -> None:
         #self.contexts: List[str] = []
         #self.users: List[str] = []
-        self.full_contexts: List[str] = []
+        self.full_contexts: List[DialogueInstance] = []
         self.full_users: List[str] = []
         self.topics: List[Tuple[int, str]] = []
         self.n_turns: int = 0
