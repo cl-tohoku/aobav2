@@ -1,0 +1,9 @@
+# @package _group_
+
+port: ???
+
+config: /work02/SLUD2021/models/dialogpt/config.json
+tokenizer: /work02/SLUD2021/models/dialogpt/tokenizer
+model: /work02/SLUD2021/models/dialogpt/GP2-pretrain-step-100000.pkl
+
+max_history: 1

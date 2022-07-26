@@ -1,0 +1,10 @@
+defaults :
+  - common: config
+
+  - aobav1: base
+  - dialogpt: base
+  - fid : base
+  - nttcs: base
+  - wiki_template: base
+
+  - post_processor: base
